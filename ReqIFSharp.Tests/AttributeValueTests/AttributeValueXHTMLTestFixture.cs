@@ -23,10 +23,10 @@ namespace ReqIFLib.Tests
     using System;
     using System.IO;
     using System.Runtime.Serialization;
-    using System.Text;
     using System.Xml;
 
     using NUnit.Framework;
+
     using ReqIFSharp;
 
     /// <summary>
@@ -60,6 +60,13 @@ namespace ReqIFLib.Tests
             var attributeValue = (AttributeValue)attributeValueXhtml;
 
             Assert.Throws<ArgumentException>(() => attributeValue.AttributeDefinition = attributeDefinitionString);
+        }
+
+        [Test]
+        public void Verify_that_GetSchema_returns_null()
+        {
+            var attributeValue = new AttributeValueXHTML();
+            Assert.That(attributeValue.GetSchema(), Is.Null);
         }
 
         [Test]

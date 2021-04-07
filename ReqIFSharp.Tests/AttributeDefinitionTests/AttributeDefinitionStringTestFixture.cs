@@ -23,10 +23,10 @@ namespace ReqIFSharp.Tests
     using System;
     using System.IO;
     using System.Runtime.Serialization;
-    using System.Text;
     using System.Xml;
 
     using NUnit.Framework;
+
     using ReqIFSharp;
 
     /// <summary>
@@ -60,6 +60,13 @@ namespace ReqIFSharp.Tests
             var attributeDefinition = (AttributeDefinition)attributeDefinitionString;
 
             Assert.Throws<ArgumentException>(() => attributeDefinition.DatatypeDefinition = datatypeDefinitionDate);
+        }
+
+        [Test]
+        public void Verify_that_GetSchema_returns_null()
+        {
+            var attribute = new AttributeDefinitionString();
+            Assert.That(attribute.GetSchema(), Is.Null);
         }
 
         [Test]

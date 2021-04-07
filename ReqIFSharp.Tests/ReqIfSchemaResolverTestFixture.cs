@@ -25,9 +25,10 @@ namespace ReqIFSharp.Tests
     using System.Xml.Schema;
 
     using NUnit.Framework;
+
     using ReqIFSharp;
 
-#if NETFULL
+#if NETFRAMEWORK || NETCOREAPP3_1
 
     /// <summary>
     /// Suite of tests for the <see cref="ReqIfSchemaResolver"/> class
@@ -39,10 +40,10 @@ namespace ReqIFSharp.Tests
         public void VerifyThatReferencedSchemaCanBeLoaded()
         {
             var a = Assembly.GetExecutingAssembly();
-            var stream = a.GetManifestResourceStream("ReqIFSharp.Tests.driver.xsd");
+            var stream = a.GetManifestResourceStream("ReqIFSharp.Tests.Resources.driver.xsd");
             
-            XmlSchema schema = XmlSchema.Read(stream, this.ValidationEventHandler);
-            schema.Compile(this.ValidationEventHandler, new ReqIfSchemaResolver());
+            var schema = XmlSchema.Read(stream, this.ValidationEventHandler);
+            Assert.DoesNotThrow(() => schema.Compile(this.ValidationEventHandler, new ReqIfSchemaResolver()));
         }
 
         /// <summary>

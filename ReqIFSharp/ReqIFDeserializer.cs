@@ -20,7 +20,7 @@
 
 namespace ReqIFSharp
 {
-#if NETFULL
+#if NETFRAMEWORK || NETSTANDARD2_0
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -50,7 +50,7 @@ namespace ReqIFSharp
     /// </summary>
     public class ReqIFDeserializer : IReqIFDeSerializer
     {
-#if NETFULL
+#if NETFRAMEWORK || NETSTANDARD2_0
 
         /// <summary>
         /// Deserializes a <see cref="ReqIF"/> XML document.
@@ -67,7 +67,7 @@ namespace ReqIFSharp
         /// <returns>
         /// A fully dereferenced <see cref="ReqIF"/> object graph
         /// </returns>
-        public ReqIF Deserialize(string xmlFilePath, bool validate = false, ValidationEventHandler validationEventHandler = null)
+        public IEnumerable<ReqIF> Deserialize(string xmlFilePath, bool validate = false, ValidationEventHandler validationEventHandler = null)
         {
             if (string.IsNullOrEmpty(xmlFilePath))
             {
@@ -93,7 +93,7 @@ namespace ReqIFSharp
         /// <returns>
         /// A fully dereferenced <see cref="ReqIF"/> object graph
         /// </returns>
-        public ReqIF Deserialize(string xmlFilePath)
+        public IEnumerable<ReqIF> Deserialize(string xmlFilePath)
         {
             if (string.IsNullOrEmpty(xmlFilePath))
             {
@@ -112,7 +112,7 @@ namespace ReqIFSharp
         /// <returns>
         /// A fully dereferenced <see cref="ReqIF"/> object graph
         /// </returns>
-        private ReqIF NonValidatingDeserialization(string xmlFilePath)
+        private IEnumerable<ReqIF> NonValidatingDeserialization(string xmlFilePath)
         {
             XmlReader xmlReader;
             var settings = new XmlReaderSettings();
@@ -137,7 +137,7 @@ namespace ReqIFSharp
                         }
                     }
 
-                    return ReqIF.MergeReqIf(reqifs);
+                    return reqifs;
                 }
             }
             catch (Exception e)
@@ -146,7 +146,10 @@ namespace ReqIFSharp
                 {
                     using (xmlReader = XmlReader.Create(xmlFilePath, settings))
                     {
-                        return (ReqIF)xmlSerializer.Deserialize(xmlReader);
+                        var reqifs = new List<ReqIF>();
+                        reqifs.Add((ReqIF)xmlSerializer.Deserialize(xmlReader));
+
+                        return reqifs;
                     }
                 }
 
@@ -156,7 +159,7 @@ namespace ReqIFSharp
 
 #endif
 
-#if NETFULL
+#if NETFRAMEWORK || NETSTANDARD2_0
 
         /// <summary>
         /// Deserializes a <see cref="ReqIF"/> XML document without validation of the content of the document.
@@ -167,7 +170,7 @@ namespace ReqIFSharp
         /// <returns>
         /// A fully dereferenced <see cref="ReqIF"/> object graph
         /// </returns>
-        private ReqIF NonValidatingDeserialization(string xmlFilePath)
+        private IEnumerable<ReqIF> NonValidatingDeserialization(string xmlFilePath)
         {
             XmlReader xmlReader;
             var settings = new XmlReaderSettings();
@@ -189,11 +192,12 @@ namespace ReqIFSharp
                     {
                         using (xmlReader = XmlReader.Create(zipArchiveEntry.Open()))
                         {
-                            reqifs.Add((ReqIF)xmlSerializer.Deserialize(xmlReader));
+                            var reqif = (ReqIF) xmlSerializer.Deserialize(xmlReader);
+                            reqifs.Add(reqif);
                         }
                     }
 
-                    return ReqIF.MergeReqIf(reqifs);
+                    return reqifs;
                 }
             }
             catch (Exception e)
@@ -202,7 +206,10 @@ namespace ReqIFSharp
                 {
                     using (xmlReader = XmlReader.Create(xmlFilePath, settings))
                     {
-                        return (ReqIF)xmlSerializer.Deserialize(xmlReader);
+                        var reqifs = new List<ReqIF>();
+                        var reqif = (ReqIF)xmlSerializer.Deserialize(xmlReader);
+                        reqifs.Add(reqif);
+                        return reqifs;
                     }
                 }
 
@@ -230,13 +237,13 @@ namespace ReqIFSharp
             var a = Assembly.GetExecutingAssembly();
             var type = this.GetType();
             var @namespace = type.Namespace;
-            var reqifSchemaResourceName = string.Format("{0}.Resources.{1}", @namespace, resourceName);
+            var reqifSchemaResourceName = $"{@namespace}.Resources.{resourceName}";
 
             var stream = a.GetManifestResourceStream(reqifSchemaResourceName);
 
             if (stream == null)
             {
-                throw new MissingManifestResourceException(string.Format("The {0} resource could not be found", reqifSchemaResourceName));
+                throw new MissingManifestResourceException($"The {reqifSchemaResourceName} resource could not be found");
             }
 
             return XmlSchema.Read(stream, validationEventHandler);
@@ -254,7 +261,7 @@ namespace ReqIFSharp
         /// <returns>
         /// A fully dereferenced <see cref="ReqIF"/> object graph
         /// </returns>
-        private ReqIF ValidatingDeserialization(string xmlFilePath, ValidationEventHandler validationEventHandler)
+        private IEnumerable<ReqIF>  ValidatingDeserialization(string xmlFilePath, ValidationEventHandler validationEventHandler)
         {
             var settings = new XmlReaderSettings { ValidationType = ValidationType.Schema };
             settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessInlineSchema;
@@ -280,7 +287,10 @@ namespace ReqIFSharp
                 {
                     var serializer = new XmlSerializer(typeof(ReqIF));
                     var reqIf = (ReqIF)serializer.Deserialize(reader);
-                    return reqIf;
+
+                    var result = new List<ReqIF>();
+                    result.Add(reqIf);
+                    return result;
                 }
             }
         }

@@ -20,14 +20,12 @@
 
 namespace ReqIFSharp.Tests
 {
-    using System;
     using System.IO;
-    using System.Linq;
-    using System.Text;
     using System.Xml;
-    using System.Xml.Schema;
     using System.Xml.Serialization;
+
     using NUnit.Framework;
+
     using ReqIFSharp;
 
     [TestFixture]
@@ -45,48 +43,34 @@ namespace ReqIFSharp.Tests
         [Test]
         public void VerifyThatReqIfObjectIsCreatedCorrectly()
         {
-            var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "testreqif.reqif");
+            var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData", "testreqif.reqif");
 
             using (var xmlreader = XmlReader.Create(path))
             {
                 var reqif = (ReqIF)this.serializer.Deserialize(xmlreader);
-                Assert.IsNotNull(reqif);
+                Assert.That(reqif, Is.Not.Null);
+                Assert.That(reqif.GetSchema(), Is.Null);
 
-                var reqIfHeader = reqif.TheHeader.Single();
-                Assert.IsNotNull(reqIfHeader);
+                Assert.That(reqif.TheHeader, Is.Not.Null);
+                Assert.That(reqif.TheHeader.GetSchema(), Is.Null);
 
-                Assert.IsNotNull(reqIfHeader.Comment);
-                Assert.IsNotEmpty(reqIfHeader.Comment);
+                Assert.That(reqif.TheHeader.Comment, Is.Not.Null.Or.Empty);
+                Assert.That(reqif.TheHeader.Identifier, Is.Not.Null.Or.Empty);
+                Assert.That(reqif.TheHeader.RepositoryId, Is.Not.Null.Or.Empty);
+                Assert.That(reqif.TheHeader.ReqIFToolId, Is.Not.Null.Or.Empty);
+                Assert.That(reqif.TheHeader.ReqIFVersion, Is.Not.Null.Or.Empty);
+                Assert.That(reqif.TheHeader.SourceToolId, Is.Not.Null.Or.Empty);
+                Assert.That(reqif.TheHeader.Title, Is.Not.Null.Or.Empty);
+                Assert.That(reqif.TheHeader.CreationTime, Is.Not.Null);
                 
-                Assert.IsNotNull(reqIfHeader.Identifier);
-                Assert.IsNotEmpty(reqIfHeader.Identifier);
-                
-                Assert.IsNotNull(reqIfHeader.RepositoryId);
-                Assert.IsNotEmpty(reqIfHeader.RepositoryId);
-                
-                Assert.IsNotNull(reqIfHeader.ReqIFToolId);
-                Assert.IsNotEmpty(reqIfHeader.ReqIFToolId);
-                
-                Assert.IsNotNull(reqIfHeader.ReqIFVersion);
-                Assert.IsNotEmpty(reqIfHeader.ReqIFVersion);
-                
-                Assert.IsNotNull(reqIfHeader.SourceToolId);
-                Assert.IsNotEmpty(reqIfHeader.SourceToolId);
-                
-                Assert.IsNotNull(reqIfHeader.Title);
-                Assert.IsNotEmpty(reqIfHeader.Title);
-
-                Assert.IsNotNull(reqIfHeader.CreationTime);
-
-                var coreContent = reqif.CoreContent.Single();
-                Assert.IsNotNull(coreContent);
-
-                Assert.IsNotEmpty(coreContent.DataTypes);
-                Assert.IsNotEmpty(coreContent.SpecObjects);
-                Assert.IsEmpty(coreContent.SpecRelationGroups);
-                Assert.IsNotEmpty(coreContent.SpecRelations);
-                Assert.IsNotEmpty(coreContent.SpecTypes);
-                Assert.IsNotEmpty(coreContent.Specifications);
+                Assert.That(reqif.CoreContent, Is.Not.Null);
+                Assert.That(reqif.CoreContent.GetSchema(), Is.Null);
+                Assert.That(reqif.CoreContent.DataTypes, Is.Not.Empty);
+                Assert.That(reqif.CoreContent.SpecObjects, Is.Not.Empty);
+                Assert.That(reqif.CoreContent.SpecRelationGroups, Is.Empty);
+                Assert.That(reqif.CoreContent.SpecRelations, Is.Not.Empty);
+                Assert.That(reqif.CoreContent.SpecTypes, Is.Not.Empty);
+                Assert.That(reqif.CoreContent.Specifications, Is.Not.Empty);
             }
         }
     }

@@ -26,6 +26,7 @@ namespace ReqIFSharp.Tests
     using System.Xml;
 
     using NUnit.Framework;
+
     using ReqIFSharp;
 
     /// <summary>
@@ -59,6 +60,13 @@ namespace ReqIFSharp.Tests
             var attributeDefinition = (AttributeDefinition)attributeDefinitionBoolean;
 
             Assert.Throws<ArgumentException>(() => attributeDefinition.DatatypeDefinition = datatypeDefinitionString) ;
+        }
+
+        [Test]
+        public void Verify_that_GetSchema_returns_null()
+        {
+            var attribute = new AttributeDefinitionBoolean();
+            Assert.That(attribute.GetSchema(), Is.Null);
         }
 
         [Test]

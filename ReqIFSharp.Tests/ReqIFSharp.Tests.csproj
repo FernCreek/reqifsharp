@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp1.1;net45</TargetFrameworks>
+    <TargetFrameworks>netcoreapp1.1;netcoreapp3.1;net45</TargetFrameworks>
     <Company>RHEA System S.A.</Company>
     <Authors>Sam Gerene, Naron Phou</Authors>
     <Description>Nunit test suite for the ReqIFSharp library</Description>
-    <Copyright>Copyright 2017-2019 RHEA System S.A.</Copyright>
+    <Copyright>Copyright 2017-2021 RHEA System S.A.</Copyright>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
     <PackageProjectUrl>https://reqifsharp.org</PackageProjectUrl>
     <PackageIconUrl>https://reqifsharp.org/assets/images/reqifsharp-logo.png</PackageIconUrl>
@@ -13,28 +13,18 @@
     <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard1.6'">
-    <DefineConstants>NETCORE;NETSTANDARD;NETSTANDARD1_6</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)'=='net45'">
-    <DefineConstants>NET45;NETFULL</DefineConstants>
-  </PropertyGroup>
-  
   <ItemGroup>
     <None Remove="driver.xsd" />
-    <None Remove="reqif.xsd" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="driver.xsd" />
-    <EmbeddedResource Include="reqif.xsd" />
+    <EmbeddedResource Include="Resources\driver.xsd" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
-    <PackageReference Include="NUnit" Version="3.10.1" />
-    <PackageReference Include="NUnit.Console" Version="3.8.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit.Console" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
   </ItemGroup>  
 
   <ItemGroup>
@@ -43,7 +33,10 @@
   </ItemGroup>  
 
   <ItemGroup>
-    <None Update="output.reqif">
+    <None Update="TestData\Datatype-Demo.reqif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\output.reqif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="output.xml">
@@ -52,13 +45,16 @@
     <None Update="output.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="sample_debug.reqif">
+    <None Update="TestData\ProR_Traceability-Template-v1.0.reqif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="test-multiple-reqif.reqifz">
+    <None Update="TestData\sample_debug.reqif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="testreqif.reqif">
+    <None Update="TestData\test-multiple-reqif.reqifz">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\testreqif.reqif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="testreqif.xml">

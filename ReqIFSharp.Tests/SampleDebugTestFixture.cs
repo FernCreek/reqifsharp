@@ -23,7 +23,9 @@ namespace ReqIFSharp.Tests
     using System;
     using System.IO;
     using System.Linq;
+
     using NUnit.Framework;
+
     using ReqIFSharp;
 
     [TestFixture]
@@ -33,9 +35,9 @@ namespace ReqIFSharp.Tests
         public void Verify_that_sampledebug_reqif_file_can_be_deserialized()
         {
             var deserializer = new ReqIFDeserializer();
-            var reqIf = deserializer.Deserialize(Path.Combine(TestContext.CurrentContext.TestDirectory, "sample_debug.reqif"));
-            var header = reqIf.TheHeader.First();
-            var content = reqIf.CoreContent.First();
+            var reqIf = deserializer.Deserialize(Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData", "sample_debug.reqif")).Single();
+            var header = reqIf.TheHeader;
+            var content = reqIf.CoreContent;
 
             Assert.That(header.Identifier, Is.EqualTo("_c1638633-9ec4-4f9f-aabd-4804f5e0110c")); 
 
