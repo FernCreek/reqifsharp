@@ -54,6 +54,7 @@ namespace ReqIFSharp
 
             if (isEditable != null)
             {
+                this.IsEditableSpecified = true;
                 this.IsEditable = XmlConvert.ToBoolean(isEditable);
             }
         }
